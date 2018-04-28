@@ -31,6 +31,7 @@ import json
 import hashlib
 import time, datetime
 
+"""
 from modules import help
 
 from modules import pefile
@@ -56,12 +57,17 @@ from modules import funcimport
 from modules import funcexport
 from modules import stringstat
 from modules import virustotal
+"""
+
+from modules import magic
+
+import logger
 
 def isfile(filename):
 	if os.path.isfile(filename):
 		return True
 	else:
-		print "No file found."
+		print ("No file found.")
 		exit()
 
 def filetype(filename):
@@ -240,20 +246,19 @@ def get_fileinfo(filename):
 def stdoutput(get_info_from):
 	output = json.loads(get_info_from)
 	
-	print "Peframe v.", output['peframe_ver']
-	print
-	print "Short information"
-	print "-"*60
-	print "File type".ljust(15),output['file_type']
-	print "File name".ljust(15), output['file_name']
-	print "File size".ljust(15), output['file_size']
-	print "Hash MD5".ljust(15), output['hash']['md5']
+	d.print ( "Peframe v.", output['peframe_ver'] )
+	d.print ( "File type".ljust(15),output['file_type'] )
+	d.print ( "File name".ljust(15), output['file_name'] )
+	d.print ( "File size".ljust(15), output['file_size'] )
+	d.print ( "Hash MD5".ljust(15), output['hash']['md5'] )
 
 	if output['virustotal']:
 		positives = output['virustotal']['positives']
 		total = output['virustotal']['total']
-		print "Virustotal".ljust(15), str(positives)+'/'+str(total)
+		d.print ("Virustotal".ljust(15), str(positives)+'/'+str(total))
 
+
+	"""
 	if output['pe_info']:
 		for item in output['pe_info']:
 			if output['pe_info'][item]:
@@ -420,9 +425,15 @@ def stdoutput(get_info_from):
 					for meta in output['pe_info'][item]:
 						print meta.ljust(15), output['pe_info'][item][meta]
 
+	"""
+
 #______________________Main______________________
 
 def main():
+
+	d  = logger.debug_logger()
+
+	"""
 	if len(sys.argv) == 1 or len(sys.argv) > 3:
 		help.help()
 		exit(0)
@@ -432,8 +443,9 @@ def main():
 		exit(0)
 
 	if len(sys.argv) == 2 and sys.argv[1] == "-v" or sys.argv[1] == "--version":
-		print help.VERSION
+		d.print (help.VERSION)
 		exit(0)
+	"""
 
 	_ROOT = os.path.abspath(os.path.dirname(__file__))
 	def get_data(path):
@@ -475,15 +487,20 @@ def main():
 		if option == "--json":
 			if re.match(r'^PE[0-9]{2}|^MS-DOS', ftype):
 				pe = pefile.PE(filename)
-				print get_pe_fileinfo(pe, filename); exit(0)
+				d.print (get_pe_fileinfo(pe, filename))
+				exit(0)
 			else:
-				print get_fileinfo(filename); exit(0)
+				d.print (get_fileinfo(filename))
+				exit(0)
 		elif option == "--strings":
-			print stringstat.get(filename); exit(0)
+			d.print (stringstat.get(filename))
+			exit(0)
 		else:
-			help.help()
+			d.print("help")
+			#help.help()
 	else:
-		help.help()
+		d.print("help")
+		#help.help()
 
 if __name__ == '__main__':
 	main()

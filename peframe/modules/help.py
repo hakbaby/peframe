@@ -33,7 +33,7 @@ INFO	= NAME+" v."+VERSION+" - Open Source Project - "+LICENSE+" LICENSE\n"+AUTHO
 
 # Help
 def help():
-	print INFO
+	print (INFO)
 	print
 	print "Usage"
 	print "".ljust(4), "peframe <filename>".ljust(20), "Short output analysis"
